@@ -10,7 +10,7 @@ PYTHON_BUILD_ROOT=$CAFFE2_ROOT/build/caffe2
 # Build Caffe2
 echo "Building Caffe2"
 cd $BUILD_ROOT
-cmake ..
+cmake .. $(python get_python_libs.py)
 make
 
 # Build the wheel from the compiled files
