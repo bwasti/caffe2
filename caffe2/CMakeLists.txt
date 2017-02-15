@@ -67,6 +67,7 @@ endif()
 set(Caffe2_MAIN_LIBS_ORDER ${Caffe2_MAIN_LIBS})
 
 # Compile exposed libraries.
+set(CMAKE_MACOSX_RPATH ON)
 add_library(Caffe2_CPU ${Caffe2_CPU_SRCS} $<TARGET_OBJECTS:Caffe_PROTO> $<TARGET_OBJECTS:Caffe2_PROTO>)
 target_link_libraries(Caffe2_CPU ${Caffe2_DEPENDENCY_LIBS})
 install(TARGETS Caffe2_CPU DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
