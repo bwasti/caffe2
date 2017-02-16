@@ -254,7 +254,6 @@ class SaveOp final : public Operator<Context> {
     for (int i = 0; i < inputs.size(); ++i) {
       inputs[i]->Serialize(def().input(i), acceptor);
     }
-    out_db->Close();
     return true;
   }
 

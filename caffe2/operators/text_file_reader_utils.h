@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "caffe2/core/common.h"
-
 namespace caffe2 {
 
 struct Token {

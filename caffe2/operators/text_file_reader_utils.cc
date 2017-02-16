@@ -1,6 +1,7 @@
 #include "caffe2/operators/text_file_reader_utils.h"
 
 #include <fcntl.h>
+#include <unistd.h>
 #include <cstring>
 #include <sstream>
 

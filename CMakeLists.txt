@@ -82,10 +82,8 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "binaries")
 
 # ---[ Build flags
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-  message(WARNING "Develop note: when all errors are addressed, turn on warning.")
-  message(STATUS "Adding no warning argument to the compiler")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /w")
+if (WIN32)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-narrowing")

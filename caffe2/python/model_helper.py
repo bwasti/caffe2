@@ -288,7 +288,6 @@ class ModelHelperBase(object):
             "Cast",
             "Checkpoint",
             "ConstantFill",
-            "Copy",
             "CopyGPUToCPU",
             "CopyCPUToGPU",
             "DequeueBlobs",

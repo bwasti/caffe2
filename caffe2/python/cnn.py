@@ -801,9 +801,7 @@ class CNNModelHelper(ModelHelperBase):
             backward_link_offset=backward_link_offset,
             step_net=str(step_net.Proto()),
             backward_step_net=str(backward_step_net.Proto()),
-            timestep="timestep",
-            outputs_with_grads=[0],
-        )
+            timestep="timestep")
         self.param_init_net.Proto().op.extend(
             step_net.param_init_net.Proto().op)
         self.params += step_net.params
