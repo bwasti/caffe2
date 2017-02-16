@@ -5,17 +5,16 @@
 
 CAFFE2_ROOT="$( cd "$(dirname "$0")"/.. ; pwd -P)"
 BUILD_ROOT=$CAFFE2_ROOT/build
-PYTHON_BUILD_ROOT=$CAFFE2_ROOT/build/caffe2
 
 # Build Caffe2
 echo "Building Caffe2"
 cd $BUILD_ROOT
-cmake .. $(python get_python_libs.py)
+cmake .. $(python $CAFFE2_ROOT/scripts/get_python_libs.py)
 make
 
 # Build the wheel from the compiled files
-cd $PYTHON_BUILD_ROOT
-python ../../scripts/setup.py bdist_wheel
+cd $BUILD_ROOT
+python $CAFFE2_ROOT/scripts/setup.py bdist_wheel
 
 echo
 echo
