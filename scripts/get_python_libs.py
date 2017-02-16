@@ -11,5 +11,7 @@
 #
 
 from distutils import sysconfig
+import os
 inc = sysconfig.get_python_inc()
-print('-DPYTHON_INCLUDE_DIR={inc}'.format(inc=inc))
+lib = os.path.dirname(sysconfig.get_config_var("LIBDIR"))
+print('-DPYTHON_INCLUDE_DIR={inc} -DPYTHON_LIBRARY={lib}/Python'.format(inc=inc, lib=lib))
