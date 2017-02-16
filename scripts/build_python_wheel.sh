@@ -13,7 +13,7 @@ $CAFFE2_ROOT/scripts/build_host_protoc.sh || exit 1
 echo "Building Caffe2"
 cd $BUILD_ROOT
 cmake .. $(python $CAFFE2_ROOT/scripts/get_python_libs.py) \
-    -DBUILD_STATIC=TRUE \
+    -DBUILD_STATIC=ON \
     -DPROTOBUF_PROTOC_EXECUTABLE=$CAFFE2_ROOT/build_host_protoc/bin/protoc \
     || exit 1
 make || exit 1
