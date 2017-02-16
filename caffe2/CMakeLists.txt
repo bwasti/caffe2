@@ -67,7 +67,14 @@ endif()
 set(Caffe2_MAIN_LIBS_ORDER ${Caffe2_MAIN_LIBS})
 
 # Compile exposed libraries.
-add_library(Caffe2_CPU ${Caffe2_CPU_SRCS} $<TARGET_OBJECTS:Caffe_PROTO> $<TARGET_OBJECTS:Caffe2_PROTO>)
+set(CMAKE_MACOSX_RPATH ON)
+
+if (BUILD_STATIC)
+  add_library(Caffe2_CPU STATIC ${Caffe2_CPU_SRCS} $<TARGET_OBJECTS:Caffe_PROTO> $<TARGET_OBJECTS:Caffe2_PROTO>)
+else()
+  add_library(Caffe2_CPU ${Caffe2_CPU_SRCS} $<TARGET_OBJECTS:Caffe_PROTO> $<TARGET_OBJECTS:Caffe2_PROTO>)
+endif()
+
 target_link_libraries(Caffe2_CPU ${Caffe2_DEPENDENCY_LIBS})
 install(TARGETS Caffe2_CPU DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 list(APPEND Caffe2_MAIN_LIBS_ORDER Caffe2_CPU)
@@ -81,7 +88,11 @@ endif()
 
 # ---[ CUDA library.
 if(USE_CUDA)
-  CUDA_ADD_LIBRARY(Caffe2_GPU ${Caffe2_GPU_SRCS})
+  if (BUILD_STATIC)
+    CUDA_ADD_LIBRARY(Caffe2_GPU STATIC ${Caffe2_GPU_SRCS})
+  else()
+    CUDA_ADD_LIBRARY(Caffe2_GPU ${Caffe2_GPU_SRCS})
+  endif()
   list(APPEND Caffe2_MAIN_LIBS_ORDER Caffe2_GPU)
   if (BUILD_SHARED_LIBS)
     target_link_libraries(Caffe2_GPU Caffe2_CPU ${Caffe2_DEPENDENCY_LIBS})
