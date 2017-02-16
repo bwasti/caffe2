@@ -24,7 +24,7 @@ function(custom_protobuf_find)
   set(Protobuf_FOUND TRUE PARENT_SCOPE)
 endfunction()
 
-if (ANDROID OR IOS OR WIN32)
+if (ANDROID OR IOS OR WIN32 OR BUILD_STATIC)
   custom_protobuf_find()
 else()
   find_package( Protobuf )
