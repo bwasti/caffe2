@@ -10,6 +10,7 @@ echo "Building protoc"
 $CAFFE2_ROOT/scripts/build_host_protoc.sh || exit 1
 
 # Build Caffe2
+mkdir -p $BUILD_ROOT
 echo "Building Caffe2"
 cd $BUILD_ROOT
 cmake .. $(python $CAFFE2_ROOT/scripts/get_python_libs.py) \
