@@ -28,7 +28,7 @@ setup(
         #'Programming Language :: Python :: 3.5',
     ],
     keywords='neural network machine learning caffe2 caffe',
-    install_requires=[''],
+    install_requires=['protobuf'],
     extras_require={},
     packages=find_packages(),
     package_data={
