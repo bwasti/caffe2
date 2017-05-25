@@ -37,7 +37,7 @@ After this, we can use IsType to query that the blob does contain an integer:
 bool isint = myblob.IsType<int>(); // will be true.
 bool isfloat = myblob.IsType<float>(); // will be false.
 ```
-And we can use Get() to get const pointers to the content.
+And we can use Get() to get const references to the content.
 ```cpp
 const int& myint_const = myblob.Get<int>();
 LOG(INFO) << myint_const;  // will be 10.
@@ -52,30 +52,32 @@ We can always change the underlying storage type by making yet another `GetMutab
 double* mydouble = myblob.GetMutable<double>();
 *mydouble = 3.14;
 ```
-Also, if we have a pre-created object, we can use Reset() similar to that of std smart pointers to transfer the ownwership to a blob object:
+Also, if we have a pre-created object, we can use Reset() similar to that of `std` smart pointers to transfer the ownwership  to a blob object:
 ```cpp
 std::vector<int>* pvec = new std::vector<int>();
 myblob.Reset(pvec); // this transfers the ownership
 bool is_vec = myblob.IsType<std::vector<int>>();
 const auto& pvec_const = myblob.Get<std::vector<int>>();
 ```
+Note: the `delete` operator on a pointer to the type must be public.
+
 Simple as that. Got it? If you would rather run the above code instead of reading, the corresponding source code is at [caffe2/contrib/cpptutorial/blob.cc](https://github.com/caffe2/caffe2/blob/master/caffe2/contrib/cpptutorial/blob.cc).
 
 # Tensor: the Most Common Blob Content
 
 Now, despite the fact that Blob can contain anything, in most cases, what gets stored in the blob is a Tensor object - the most common data structure that stores multi-dimensional arrays. The Tensor class is defined as device-specific:
 
-template <class Context>
-class Tensor;
+    template <class Context>
+    class Tensor;
 
 The Context allows us to abstract away different types of devices, such as a CPU or a CUDA gpu. For now, for the sake of simplicity, let's assume that there is a CPUContext, and we will use Tensor<CPUContext> to show the Tensor interface. For simplicity, we will do
 
-typedef Tensor<CPUContext> TensorCPU;
+    typedef Tensor<CPUContext> TensorCPU;
 
 Let's start with a Blob and create a TensorCPU object out of it.
 
-Blob myblob;
-TensorCPU* mytensor = myblob.GetMutable<TensorCPU>();
+    Blob myblob;
+    TensorCPU* mytensor = myblob.GetMutable<TensorCPU>();
 
 This tensor is currently empty. There are two key parts that defines a tensor: its shape, and its data type. If you are familiar with Python, this is essentially the shape and dtype of an ndarray. Currently, if we query the 
 
