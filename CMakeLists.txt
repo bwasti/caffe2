@@ -3,9 +3,7 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 message(STATUS "Setting CMAKE_FIND_NO_INSTALL_PREFIX")
 set(CMAKE_FIND_NO_INSTALL_PREFIX TRUE)
 
-project(Caffe2 CXX C)
-
-# TODO(bwasti): versioning
+project(Caffe2 VERSION 0.8.1 LANGUAGES CXX C)
 
 # Useful functions.
 function (exclude OUTPUT INPUT)
