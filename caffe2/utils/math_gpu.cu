@@ -16,13 +16,12 @@
 
 // Implements the math functions for CPU.
 
-#include "caffe2/utils/math.h"
-
 #include <cub/block/block_reduce.cuh>
 #include <cub/cub.cuh>
 
 #include "caffe2/core/context_gpu.h"
 #include "caffe2/utils/conversions.h"
+#include "caffe2/utils/math.h"
 
 #if THRUST_VERSION >= 100800
 #define THRUST_SUPPORTS_PER_THREAD
@@ -2142,44 +2141,33 @@ namespace {
 
 constexpr int kCompileTimeCUDAMaxTransposeDims = 8;
 
-__device__ void ComputeXStride(
+__device__ void ComputeYStride(
     const int num_axes,
-    const int* x_dims,
+    const int* y_dims,
     const int* axes,
-    int* x_strides) {
+    int* y_strides) {
   int buff[kCompileTimeCUDAMaxTransposeDims];
   int cur_stride = 1;
-#pragma unroll
   for (int i = num_axes - 1; i >= 0; --i) {
     buff[i] = cur_stride;
-#if __CUDA_ARCH__ >= 350
-    cur_stride *= __ldg(x_dims + i);
-#else
-    cur_stride *= x_dims[i];
-#endif
+    cur_stride *= y_dims[i];
   }
-#pragma unroll
   for (int i = 0; i < num_axes; ++i) {
-#if __CUDA_ARCH__ >= 350
-    x_strides[i] = buff[__ldg(axes + i)];
-#else
-    x_strides[i] = buff[axes[i]];
-#endif
+    y_strides[axes[i]] = buff[i];
   }
 }
 
-__device__ int GetXIndex(
+__device__ int GetYIndex(
     const int num_axes,
-    const int* y_dims,
-    const int* x_strides,
-    int y_index) {
-  int x_index = 0;
-#pragma unroll
-  for (int i = num_axes - 1; i >= 0 && y_index > 0; --i) {
-    x_index += (y_index % y_dims[i]) * x_strides[i];
-    y_index /= y_dims[i];
+    const int* x_dims,
+    const int* y_strides,
+    int x_index) {
+  int y_index = 0;
+  for (int i = num_axes - 1; i >= 0 && x_index > 0; --i) {
+    y_index += x_index % x_dims[i] * y_strides[i];
+    x_index /= x_dims[i];
   }
-  return x_index;
+  return y_index;
 }
 
 template <typename T>
@@ -2191,18 +2179,11 @@ __global__ void TransposeCUDA(
     const int data_size,
     const T* X,
     T* Y) {
-  __shared__ int x_strides[kCompileTimeCUDAMaxTransposeDims];
-  __shared__ int y_dims_shared[kCompileTimeCUDAMaxTransposeDims];
-  const int tid = threadIdx.x;
-  if (tid == 0) {
-    ComputeXStride(num_axes, x_dims, axes, x_strides);
-  }
-  if (tid < num_axes) {
-    y_dims_shared[tid] = y_dims[tid];
-  }
+  __shared__ int y_strides[kCompileTimeCUDAMaxTransposeDims];
+  ComputeYStride(num_axes, y_dims, axes, y_strides);
   __syncthreads();
-  CUDA_1D_KERNEL_LOOP(y_index, data_size) {
-    const int x_index = GetXIndex(num_axes, y_dims_shared, x_strides, y_index);
+  CUDA_1D_KERNEL_LOOP(x_index, data_size) {
+    const int y_index = GetYIndex(num_axes, x_dims, y_strides, x_index);
 #if __CUDA_ARCH__ >= 350
     Y[y_index] = __ldg(X + x_index);
 #else

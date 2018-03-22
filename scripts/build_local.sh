@@ -47,7 +47,6 @@ else
   echo "Building Caffe2 in: $BUILD_ROOT"
 
   cmake "$CAFFE2_ROOT" \
-        -DCMAKE_BUILD_TYPE=Release \
         "${CMAKE_ARGS[@]}" \
         "$@"
 

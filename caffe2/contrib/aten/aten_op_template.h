@@ -21,6 +21,7 @@
 #include <caffe2/core/context.h>
 #include <caffe2/core/operator.h>
 #include <caffe2/utils/math.h>
+#include <google/protobuf/text_format.h>
 #include <iostream>
 
 // a map from descriptor strings (see [DESCRIPTORS])

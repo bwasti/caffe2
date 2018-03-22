@@ -10,14 +10,7 @@
 
 # # Model Quickload
 # 
-# This notebook will show you how to quickly load a pretrained SqueezeNet model and test it on images of your choice in four main steps. 
-# 
-# 1. Load the model
-# 2. Format the input
-# 3. Run the test
-# 4. Process the results
-# 
-# The model used in this tutorial has been pretrained on the full 1000 class ImageNet dataset, and is downloaded from Caffe2's [Model Zoo](https://github.com/caffe2/caffe2/wiki/Model-Zoo). For an all around more in-depth tutorial on using pretrained models check out the [Loading Pretrained Models](https://github.com/caffe2/caffe2/blob/master/caffe2/python/tutorials/Loading_Pretrained_Models.ipynb) tutorial.  
+# This short notebook will show you how you can very quickly load and test SqueezeNet, which is a very small and fast model based on AlexNet and is useful for identifying objects. The range of objects groups is only 1,000.
 # 
 # Before this script will work, you need to download the model and install it. You can do this by running:
 # 
@@ -25,21 +18,15 @@
 # sudo python -m caffe2.python.models.download -i squeezenet
 # ```
 # 
-# Or make a folder named `squeezenet`, download each file listed below to it, and place it in the `/caffe2/python/models/` directory:
+# Or make a squeezenet folder, download each file listed below to it, and place it in `/caffe2/python/models/`:
 # * [predict_net.pb](https://download.caffe2.ai/models/squeezenet/predict_net.pb)
 # * [init_net.pb](https://download.caffe2.ai/models/squeezenet/init_net.pb)
 # 
-# Notice, the helper function *parseResults* will translate the integer class label of the top result to an English label by searching through the [inference codes file](inference_codes.txt). If you want to really test the model's capabilities, pick a code from the file, find an image representing that code, and test the model with it!
+# The helper functions will look up the top object detection result for you by searching through this [inference codes file](inference_codes.txt). If you want to see how well the model detects samples different than provided here, take a look at the codes, and find an image url to an image of an object in the list of codes.
 
-# In[6]:
+# In[1]:
 
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-import numpy as np
-import operator
 # load up the caffe2 workspace
 from caffe2.python import workspace
 # choose your model here (use the downloader first)
@@ -47,15 +34,15 @@ from caffe2.python.models import squeezenet as mynet
 # helper image processing functions
 import helpers
 
-##### Load the Model
-# Load the pre-trained model
+# load the pre-trained model
 init_net = mynet.init_net
 predict_net = mynet.predict_net
+# you must name it something
+predict_net.name = "squeezenet_predict"
+workspace.RunNetOnce(init_net)
+workspace.CreateNet(predict_net)
+p = workspace.Predictor(init_net.SerializeToString(), predict_net.SerializeToString())
 
-# Initialize the predictor with SqueezeNet's init_net and predict_net
-p = workspace.Predictor(init_net, predict_net)
-
-##### Select and format the input image
 # use whatever image you want (urls work too)
 # img = "https://upload.wikimedia.org/wikipedia/commons/a/ac/Pretzel.jpg"
 # img = "images/cat.jpg"
@@ -66,7 +53,6 @@ p = workspace.Predictor(init_net, predict_net)
 # img = "images/orangutan.jpg"
 # img = "images/aircraft-carrier.jpg"
 img = "images/flower.jpg"
-
 # average mean to subtract from the image
 mean = 128
 # the size of images that the model was trained with
@@ -75,21 +61,10 @@ input_size = 227
 # use the image helper to load the image and convert it to NCHW
 img = helpers.loadToNCHW(img, mean, input_size)
 
-##### Run the test
 # submit the image to net and get a tensor of results
-results = p.run({'data': img})  
-
-##### Process the results
-# Quick way to get the top-1 prediction result
-# Squeeze out the unnecessary axis. This returns a 1-D array of length 1000
-preds = np.squeeze(results)
-# Get the prediction and the confidence by finding the maximum value and index of maximum value in preds array
-curr_pred, curr_conf = max(enumerate(preds), key=operator.itemgetter(1))
-print("Top-1 Prediction: {}".format(curr_pred))
-print("Top-1 Confidence: {}\n".format(curr_conf))
-
-# Lookup our result from the inference list
+results = p.run({'data': img})   
 response = helpers.parseResults(results)
-print(response)
+# and lookup our result from the inference list
+print response
 
 

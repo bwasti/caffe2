@@ -175,12 +175,9 @@ unique_ptr<OperatorBase> _CreateOperator(
     }
   }
   if (operator_def.engine().size() && !VLOG_IS_ON(1)) {
-    static int log_occurrences = 0;
-    if (log_occurrences <= 64) {
-      ++log_occurrences;
-      LOG(INFO) << "Engine " << operator_def.engine()
-                << " is not available for operator " << op_type << ".";
-    }
+    LOG_FIRST_N(INFO, 64) << "Engine " << operator_def.engine()
+                          << " is not available for operator " << op_type
+                          << ".";
   }
   VLOG(1) << "Using default implementation.";
 

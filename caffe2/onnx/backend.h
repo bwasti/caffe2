@@ -5,6 +5,7 @@
 #include "device.h"
 #include "onnx/onnx_pb.h"
 
+#include <google/protobuf/text_format.h>
 #include <functional>
 #include <string>
 #include <unordered_map>
@@ -145,7 +146,7 @@ class Caffe2Backend {
       OnnxNode* onnx_node,
       int opset_version);
 
-  Caffe2Ops CreateConvPoolOpBase(
+  Caffe2Ops CreateConvePoolOpBase(
       const ModelProto& init_model,
       const ModelProto& pred_model,
       OnnxNode* onnx_node,
@@ -188,6 +189,12 @@ class Caffe2Backend {
       int opset_version);
 
   Caffe2Ops CreateSlice(
+      const ModelProto& init_model,
+      const ModelProto& pred_model,
+      OnnxNode* onnx_node,
+      int opset_version);
+
+  Caffe2Ops CreateSqrt(
       const ModelProto& init_model,
       const ModelProto& pred_model,
       OnnxNode* onnx_node,

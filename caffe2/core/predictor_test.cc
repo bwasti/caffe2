@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <google/protobuf/text_format.h>
 #include "caffe2/core/context.h"
 #include "caffe2/core/operator.h"
 #include "caffe2/core/predictor.h"
@@ -157,7 +158,7 @@ std::unique_ptr<Blob> randomTensor(
 NetDef parseNetDef(const std::string& value) {
   NetDef def;
   CAFFE_ENFORCE(
-      TextFormat::ParseFromString(value, &def),
+      google::protobuf::TextFormat::ParseFromString(value, &def),
       "Failed to parse NetDef with value: ",
       value);
   return def;
@@ -166,7 +167,7 @@ NetDef parseNetDef(const std::string& value) {
 MetaNetDef parseMetaNetDef(const std::string& value) {
   MetaNetDef def;
   CAFFE_ENFORCE(
-      TextFormat::ParseFromString(value, &def),
+      google::protobuf::TextFormat::ParseFromString(value, &def),
       "Failed to parse NetDef with value: ",
       value);
   return def;

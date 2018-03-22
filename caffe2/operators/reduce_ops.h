@@ -74,7 +74,6 @@ class ReduceOpBase : public Operator<Context> {
         Y->template mutable_data<T>(),
         Y_size,
         axes_,
-        y_dims,
         keepdims_);
   }
 
@@ -86,7 +85,6 @@ class ReduceOpBase : public Operator<Context> {
       T* Y_data,
       const TIndex Y_size,
       vector<int>& axes,
-      vector<TIndex>& Y_dims,
       int keepdims) = 0;
 
  private:
@@ -110,7 +108,6 @@ class ReduceSumOp : public ReduceOpBase<T, Context> {
       T* Y_data,
       const TIndex Y_size,
       vector<int>& axes,
-      vector<TIndex>& Y_dims,
       int keepdims) override;
 };
 
@@ -130,7 +127,6 @@ class ReduceMeanOp : public ReduceOpBase<T, Context> {
       T* Y_data,
       const TIndex Y_size,
       vector<int>& axes,
-      vector<TIndex>& Y_dims,
       int keepdims) override;
 };
 

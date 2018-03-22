@@ -20,6 +20,7 @@
 #include "caffe2/core/operator.h"
 #include "time_observer.h"
 
+#include <google/protobuf/text_format.h>
 #include <gtest/gtest.h>
 #include <chrono>
 #include <thread>

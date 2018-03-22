@@ -69,33 +69,6 @@ class TestReduceOps(hu.HypothesisTestCase):
             reduce_op_test("ReduceSum", reduce_sum_ref, data, axes, keepdims,
                            gc)
 
-        for axes in it.combinations(range(3), 2):
-            data = np.random.randn(d0, d1, d2).astype(np.float32)
-
-            reduce_op_test("ReduceMean", reduce_mean_ref, data, axes, keepdims,
-                           gc)
-
-            reduce_op_test("ReduceSum", reduce_sum_ref, data, axes, keepdims,
-                           gc)
-
-        for axes in it.combinations(range(2), 2):
-            data = np.random.randn(d0, d1).astype(np.float32)
-
-            reduce_op_test("ReduceMean", reduce_mean_ref, data, axes, keepdims,
-                           gc)
-
-            reduce_op_test("ReduceSum", reduce_sum_ref, data, axes, keepdims,
-                           gc)
-
-        for axes in it.combinations(range(1), 1):
-            data = np.random.randn(d0).astype(np.float32)
-
-            reduce_op_test("ReduceMean", reduce_mean_ref, data, axes, keepdims,
-                           gc)
-
-            reduce_op_test("ReduceSum", reduce_sum_ref, data, axes, keepdims,
-                           gc)
-
 
 class TestReduceFrontReductions(hu.HypothesisTestCase):
     def grad_variant_input_test(self, grad_op_name, X, ref, num_reduce_dim):
@@ -359,4 +332,3 @@ class TestReduceFrontReductions(hu.HypothesisTestCase):
         self.reduce_op_test(
             "ReduceBackMean", ref_mean, [X, lengths], ["input", "lengths"],
             num_reduce_dim, gc)
-

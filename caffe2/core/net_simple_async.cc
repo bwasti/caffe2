@@ -17,7 +17,6 @@
 #include "caffe2/core/net_simple_async.h"
 #include "caffe2/core/net.h"
 
-#include <iostream>
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
@@ -101,8 +100,8 @@ vector<float> AsyncSimpleNet::TEST_Benchmark(
     const int warmup_runs,
     const int main_runs,
     const bool run_individual) {
-  std::cout << "Starting benchmark." << std::endl;
-  std::cout << "Running warmup runs." << std::endl;
+  LOG(INFO) << "Starting benchmark.";
+  LOG(INFO) << "Running warmup runs.";
   CAFFE_ENFORCE(
       warmup_runs >= 0,
       "Number of warm up runs should be non negative, provided ",
@@ -112,7 +111,7 @@ vector<float> AsyncSimpleNet::TEST_Benchmark(
     CAFFE_ENFORCE(Run(), "Warmup run ", i, " has failed.");
   }
 
-  std::cout << "Main runs." << std::endl;
+  LOG(INFO) << "Main runs.";
   CAFFE_ENFORCE(
       main_runs >= 0,
       "Number of main runs should be non negative, provided ",
@@ -123,13 +122,13 @@ vector<float> AsyncSimpleNet::TEST_Benchmark(
     CAFFE_ENFORCE(Run(), "Main run ", i, " has failed.");
   }
   auto millis = timer.MilliSeconds();
-  std::cout << "Main run finished. Milliseconds per iter: "
+  LOG(INFO) << "Main run finished. Milliseconds per iter: "
             << millis / main_runs
-            << ". Iters per second: " << 1000.0 * main_runs / millis << std::endl;
+            << ". Iters per second: " << 1000.0 * main_runs / millis;
 
   if (run_individual) {
-    std::cout << "AsyncSimpleNet does not do per-op benchmark. To do so, "
-                 "switch to a simple net type." << std::endl;
+    LOG(INFO) << "AsyncSimpleNet does not do per-op benchmark. To do so, "
+                 "switch to a simple net type.";
   }
   return vector<float>{millis / main_runs};
 }

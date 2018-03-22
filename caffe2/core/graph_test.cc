@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <google/protobuf/text_format.h>
 #include <gtest/gtest.h>
 #include "caffe2/core/graph.h"
 #include "caffe2/core/net.h"

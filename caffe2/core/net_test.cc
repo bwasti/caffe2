@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <google/protobuf/text_format.h>
 #include <gtest/gtest.h>
 #include "caffe2/core/net.h"
 #include "caffe2/core/net_dag.h"
@@ -160,7 +161,7 @@ void checkChainingAndRun(
   Workspace ws;
   ws.CreateBlob("in");
   NetDef net_def;
-  CAFFE_ENFORCE(TextFormat::ParseFromString(spec, &net_def));
+  CAFFE_ENFORCE(google::protobuf::TextFormat::ParseFromString(spec, &net_def));
   {
     net_def.set_num_workers(4);
     auto old = FLAGS_caffe2_disable_chaining;
@@ -180,7 +181,7 @@ void checkNumChainsAndRun(const char* spec, const int expected_num_chains) {
   Workspace ws;
 
   NetDef net_def;
-  CAFFE_ENFORCE(TextFormat::ParseFromString(spec, &net_def));
+  CAFFE_ENFORCE(google::protobuf::TextFormat::ParseFromString(spec, &net_def));
   net_def.set_num_workers(4);
 
   // Create all external inputs
@@ -579,7 +580,7 @@ TEST(NetTest, FailingOperator) {
   ws.CreateBlob("in");
 
   NetDef net_def;
-  CAFFE_ENFORCE(TextFormat::ParseFromString(spec, &net_def));
+  CAFFE_ENFORCE(google::protobuf::TextFormat::ParseFromString(spec, &net_def));
 
   {
     net_def.set_num_workers(4);

@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
   workspace->RunPlan(plan_def);
 
   // This is to allow us to use memory leak checks.
-  caffe2::ShutdownProtobufLibrary();
+  google::protobuf::ShutdownProtobufLibrary();
   MPI_Finalize();
   return 0;
 }

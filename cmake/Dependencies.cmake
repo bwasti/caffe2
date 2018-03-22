@@ -2,12 +2,9 @@
 include("cmake/ProtoBuf.cmake")
 
 # ---[ Threads
-include(cmake/public/threads.cmake)
-if (TARGET Threads::Threads)
+if(USE_THREADS)
+  include(cmake/public/threads.cmake)
   list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS Threads::Threads)
-else()
-  message(FATAL_ERROR
-      "Cannot find threading library. Caffe2 requires Threads to compile.")
 endif()
 
 # ---[ protobuf

@@ -17,7 +17,6 @@
 #include "caffe2/core/net_simple.h"
 #include "caffe2/core/net.h"
 
-#include <iostream>
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
@@ -99,9 +98,8 @@ vector<float> SimpleNet::TEST_Benchmark(
     const int warmup_runs,
     const int main_runs,
     const bool run_individual) {
-  /* Use std::cout because logging may be disabled */
-  std::cout << "Starting benchmark." << std::endl;
-  std::cout << "Running warmup runs." << std::endl;
+  LOG(INFO) << "Starting benchmark.";
+  LOG(INFO) << "Running warmup runs.";
   CAFFE_ENFORCE(
       warmup_runs >= 0,
       "Number of warm up runs should be non negative, provided ",
@@ -111,7 +109,7 @@ vector<float> SimpleNet::TEST_Benchmark(
     CAFFE_ENFORCE(Run(), "Warmup run ", i, " has failed.");
   }
 
-  std::cout << "Main runs." << std::endl;
+  LOG(INFO) << "Main runs.";
   CAFFE_ENFORCE(
       main_runs >= 0,
       "Number of main runs should be non negative, provided ",
@@ -122,9 +120,9 @@ vector<float> SimpleNet::TEST_Benchmark(
     CAFFE_ENFORCE(Run(), "Main run ", i, " has failed.");
   }
   auto millis = timer.MilliSeconds();
-  std::cout << "Main run finished. Milliseconds per iter: "
+  LOG(INFO) << "Main run finished. Milliseconds per iter: "
             << millis / main_runs
-            << ". Iters per second: " << 1000.0 * main_runs / millis << std::endl;
+            << ". Iters per second: " << 1000.0 * main_runs / millis;
 
   vector<float> time_per_op(operators_.size(), 0);
   vector<uint64_t> flops_per_op;
@@ -196,10 +194,10 @@ vector<float> SimpleNet::TEST_Benchmark(
         memory_bytes_str << " (" << to_string(1.0e-6 * param_bytes_per_op[idx])
                          << " MB)";
       }
-      std::cout << "Operator #" << idx << " (" << print_name << ", " << op_type
+      LOG(INFO) << "Operator #" << idx << " (" << print_name << ", " << op_type
                 << ") " << time_per_op[idx] / main_runs << " ms/iter"
                 << flops_str.str() << memory_bytes_str.str()
-                << param_bytes_str.str() << std::endl;
+                << param_bytes_str.str();
       ++idx;
     }
     const std::vector<string> metric(
@@ -214,7 +212,7 @@ vector<float> SimpleNet::TEST_Benchmark(
     metric_per_op_type_vec_vec.emplace_back(&memory_bytes_per_op_type);
     metric_per_op_type_vec_vec.emplace_back(&param_bytes_per_op_type);
     for (int i = 0; i < metric_per_op_type_vec_vec.size(); ++i) {
-      std::cout << metric[i] << " per operator type:" << std::endl;
+      LOG(INFO) << metric[i] << " per operator type:";
       auto* item = metric_per_op_type_vec_vec[i];
       std::vector<std::pair<string, float>> metric_per_op_type_vec(
           (*item).begin(), (*item).end());
@@ -231,13 +229,13 @@ vector<float> SimpleNet::TEST_Benchmark(
         if (total_metric > 0.) {
           percent = (100.0 * op_item.second * normalizer[i] / total_metric);
         }
-        std::cout << std::setw(15) << std::setfill(' ')
+        LOG(INFO) << std::setw(15) << std::setfill(' ')
                   << op_item.second * normalizer[i] << " " << unit[i] << ". "
                   << std::setw(10) << std::setfill(' ') << percent << "%. "
-                  << op_item.first << std::endl;
+                  << op_item.first;
       }
-      std::cout << std::setw(15) << std::setfill(' ') << total_metric << " "
-                << unit[i] << " in Total" << std::endl;
+      LOG(INFO) << std::setw(15) << std::setfill(' ') << total_metric << " "
+                << unit[i] << " in Total";
     }
   }
   // We will reuse time_per_op to return the result of BenchmarkNet.

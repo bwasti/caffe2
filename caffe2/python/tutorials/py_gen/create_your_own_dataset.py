@@ -24,12 +24,7 @@
 # In[1]:
 
 
-# First let's import some necessities
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
+# First let's import a few things needed.
 import urllib2 # for downloading the dataset from the web.
 import numpy as np
 from matplotlib import pyplot
@@ -89,7 +84,7 @@ for i in range(3):
     pyplot.plot(test_features[test_labels==i, 0], test_features[test_labels==i, 1], legend[i])
 
 
-# Now, as promised, let's put things into a Caffe2 DB. In this DB, what would happen is that we will use "train_xxx" as the key, and use a TensorProtos object to store two tensors for each data point: one as the feature and one as the label. We will use Caffe2's Python DB interface to do so.
+# Now, as promised, let's put things into a Caffe2 DB. In this DB, what would happen is that we will use "train_xxx" as the key, and use a TensorProtos object to store two tensors for each data point: one as the feature and one as the label. We will use Caffe2 python's DB interface to do so.
 
 # In[6]:
 

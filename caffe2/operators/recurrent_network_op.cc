@@ -19,6 +19,7 @@
 #include "caffe2/utils/proto_utils.h"
 
 #ifndef CAFFE2_RNN_NO_TEXT_FORMAT
+#include <google/protobuf/text_format.h>
 #endif
 
 CAFFE2_DEFINE_bool(
@@ -264,7 +265,7 @@ NetDef extractNetDef(const OperatorDef& op, const std::string& argName) {
     const auto netString =
         ArgumentHelper::GetSingleArgument<OperatorDef, string>(op, argName, "");
     CAFFE_ENFORCE(
-        TextFormat::ParseFromString(netString, &result),
+        google::protobuf::TextFormat::ParseFromString(netString, &result),
         "Invalid NetDef");
     return result;
 #else
